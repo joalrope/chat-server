@@ -1,0 +1,15 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Server chat",
+  "main": "index.js",
+  "repository": "https://github.com/joalrope/chat-server.git",
+  "author": "Jose Rodriguez",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^6.0.13",
+    "socket.io": "^4.4.0"
+  }
+}
