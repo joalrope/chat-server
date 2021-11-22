@@ -3,17 +3,16 @@ const app = express();
 const http = require('http').Server(app);
 const path = require('path');
 const io = require('socket.io')(http);
-
-const uri = process.env.MONGODB_URI;
-const port = process.env.PORT || 5000;
+require('dotenv').config();
 
 const Message = require('./models/Message');
-const mongoose = require('mongoose');
 const { dbConnection } = require('./database/config');
+const PORT = process.env.PORT;
 
 dbConnection();
 
-app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
+//app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
+app.use(express.static('public')); // Directorio publico (Archivos estaticos)
 
 io.on('connection', (socket) => {
   Message.find()
@@ -39,6 +38,6 @@ io.on('connection', (socket) => {
   });
 });
 
-http.listen(port, () => {
-  console.log('listening on *:' + port);
+http.listen(PORT, () => {
+  console.log(`Servidor corriendo en el puerto: ${process.env.PORT}`);
 });

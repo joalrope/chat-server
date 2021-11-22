@@ -7,7 +7,12 @@
   "author": "Jose Rodriguez",
   "license": "MIT",
   "private": false,
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
   "dependencies": {
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "mongoose": "^6.0.13",
     "socket.io": "^4.4.0"
