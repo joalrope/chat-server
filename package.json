@@ -7,8 +7,10 @@
   "author": "Jose Rodriguez",
   "license": "MIT",
   "private": false,
+  "type": "module", 
   "scripts": {
-    "dev": "nodemon index.js",
+    "babel-node": "babel-node --presets=@babel/preset-env",
+    "dev": "nodemon --exec npm run babel-node index.js",
     "start": "node index.js"
   },
   "dependencies": {
@@ -16,5 +18,11 @@
     "express": "^4.17.1",
     "mongoose": "^6.0.13",
     "socket.io": "^4.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/node": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "babel-cli": "^7.0.0-beta.3"
   }
 }

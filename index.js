@@ -1,43 +1,48 @@
-const express = require('express');
+//Servidor con express
+import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io';
+import { config } from 'dotenv';
+//import { dbConnection } from './database/config.js';
+
 const app = express();
-const http = require('http').Server(app);
-const path = require('path');
-const io = require('socket.io')(http);
-require('dotenv').config();
+const server = http.createServer(app);
 
-const Message = require('./models/Message');
-const { dbConnection } = require('./database/config');
-const PORT = process.env.PORT;
+config();
+//dbConnection();
 
-dbConnection();
-
-//app.use(express.static(path.join(__dirname, '..', 'client', 'build')));
-app.use(express.static('public')); // Directorio publico (Archivos estaticos)
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+  },
+});
 
 io.on('connection', (socket) => {
-  Message.find()
-    .sort({ createdAt: -1 })
-    .limit(20)
-    .exec((err, messages) => {
-      if (err) return console.error(err);
+  let nickName;
 
-      socket.emit('init', messages);
+  socket.on('connecting', (user) => {
+    nickName = user;
+    socket.broadcast.emit('messages', {
+      nickName,
+      message: `${nickName} ha entrado al chat`,
     });
+  });
 
-  socket.on('message', (msg) => {
-    const message = new Message({
-      content: msg.content,
-      name: msg.name,
+  socket.on('message', (nickName, message) => {
+    io.emit('messages', { nickName, message });
+  });
+
+  socket.on('disconnect', () => {
+    io.emit('messages', {
+      servidor: 'Servidor',
+      mensaje: `${nickName} se ha retirado del chat`,
     });
-
-    message.save((err) => {
-      if (err) return console.error(err);
-    });
-
-    socket.broadcast.emit('push', msg);
   });
 });
 
-http.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto: ${process.env.PORT}`);
-});
+const PORT = process.env.PORT;
+
+server.listen(PORT, () =>
+  console.log(`Servidor escuchando en el Puerto ${PORT}`)
+);

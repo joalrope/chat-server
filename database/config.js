@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const dbConnection = async () => {
+export const dbConnection = async () => {
   try {
     await mongoose.connect(process.env.DB_CNN, {
       useNewUrlParser: true,
@@ -12,8 +12,4 @@ const dbConnection = async () => {
     console.log(error);
     throw new Error('Error al inicializar DB');
   }
-};
-
-module.exports = {
-  dbConnection,
 };
