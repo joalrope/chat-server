@@ -1,17 +1,21 @@
 //Servidor con express
 import express from 'express';
-import http from 'http';
+import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { config } from 'dotenv';
 //import { dbConnection } from './database/config.js';
 
 const app = express();
-const server = http.createServer(app);
+const httpServer = createServer(app);
 
 config();
 //dbConnection();
+const { pathname } = new URL('public/index.html', import.meta.url);
+app.get('/', function (req, res) {
+  res.sendFile(pathname);
+});
 
-const io = new Server(server, {
+const io = new Server(httpServer, {
   cors: {
     origin: 'http://localhost:3000',
     methods: ['GET', 'POST'],
@@ -33,7 +37,7 @@ io.on('connection', (socket) => {
     io.emit('messages', { nickName, message });
   });
 
-  socket.on('desconn', () => {
+  socket.on('disconnecting', () => {
     console.log('desconectando en el servidor');
     io.emit('messages', {
       nickName: 'Servidor',
@@ -44,6 +48,6 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT;
 
-server.listen(PORT, () =>
+httpServer.listen(PORT, () =>
   console.log(`Servidor escuchando en el Puerto ${PORT}`)
 );
