@@ -36,8 +36,8 @@ io.on('connection', (socket) => {
   socket.on('desconn', () => {
     console.log('desconectando en el servidor');
     io.emit('messages', {
-      servidor: 'Servidor',
-      mensaje: `${nickName} se ha retirado del chat`,
+      nickName: 'Servidor',
+      message: `${nickName} se ha retirado del chat`,
     });
   });
 });
