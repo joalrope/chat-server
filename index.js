@@ -10,7 +10,9 @@ const httpServer = createServer(app);
 
 config();
 //dbConnection();
+
 const { pathname } = new URL('public/index.html', import.meta.url);
+
 app.get('/', function (req, res) {
   res.sendFile(pathname);
 });
@@ -34,12 +36,12 @@ io.on('connection', (socket) => {
   });
 
   socket.on('message', (nickName, message) => {
-    io.emit('messages', { nickName, message });
+    socket.broadcast.emit('messages', { nickName, message });
   });
 
   socket.on('disconnecting', () => {
     console.log('desconectando en el servidor');
-    io.emit('messages', {
+    socket.broadcast.emit('messages', {
       nickName: 'Servidor',
       message: `${nickName} se ha retirado del chat`,
     });
