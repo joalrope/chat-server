@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('messages', { nickName, message });
   });
 
-  socket.on('disconnecting', () => {
+  socket.on('disconnect', () => {
     console.log('desconectando en el servidor');
     socket.broadcast.emit('messages', {
       nickName: 'Servidor',
